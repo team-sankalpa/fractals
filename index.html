@@ -1,16 +1,29 @@
 <!doctype html>
 <html>
   <body>
-    <canvas id="myCanvas" width="800" height="600"></canvas>
-    <button onclick="zoom(10)">+</button>
-    <button onclick="zoom(-10)">-</button>
+    <style>
+    #canvas-container {
+	   width: 100%;
+	   text-align:center;
+	}
+
+   	#myCanvas{
+   		margin:0 auto;
+   		display: inline;
+   	}
+    </style>
+    <div id="canvas-container">
+	    <canvas id="myCanvas" width="600" height="400"></canvas><br>
+	    <button onclick="zoom(10)">+</button>
+	    <button onclick="zoom(-10)">-</button>
+	</div>
     <script>
     	let canvas = document.getElementById('myCanvas')
     	let ctx = canvas.getContext('2d')
     	
     	let scaleFactor = 200
-    	let panX = 2
-    	let panY = 1.5
+    	let panX = 1
+    	let panY = 1
         let requestId
 
     	function paint(canvas, ctx, scaleFactor, panX, panY){
