@@ -2,8 +2,8 @@
 <html>
   <body>
     <canvas id="myCanvas" width="800" height="800"></canvas>
-    <button onclick="zoom()">+</button>
-    <button onclick="zoomOut()">-</button>
+    <button onclick="zoom(10)">+</button>
+    <button onclick="zoom(-10)">-</button>
     <script>
     	let canvas = document.getElementById('myCanvas')
     	let ctx = canvas.getContext('2d')
@@ -11,9 +11,8 @@
     	let scaleFactor = 200
     	let panX = 2
     	let panY = 1.5
-    	
-    	paint(canvas, ctx, scaleFactor, panX, panY)
-    	
+        let requestId
+
     	function paint(canvas, ctx, scaleFactor, panX, panY){
  		    for(let x = 0; x < canvas.width; x++){
 		    	for(let y = 0; y < canvas.height; y++){
@@ -30,8 +29,8 @@
         	let oX = x, oY = y
 			let maxIterations = 100
       		for(let i=0; i < maxIterations; i++){
-      			let tempX = x * x - y * y + oX
-      			let tempY = 2 * x * y + oY
+      			let tempX = x * x - y * y - oX
+      			let tempY = 2 * x * y - oY
       			x = tempX
       			y = tempY
       			if (x * y > 4)
@@ -39,15 +38,24 @@
       		}
       		return 0
         }
-        let zoom = () => {
-        	scaleFactor += 10
-        	paint(canvas, ctx, scaleFactor, panX, panY)
+        let paintFrame = () =>{
+        	if(requestId){
+        		console.log("clearing earlier paint request")
+        		cancelAnimationFrame(requestId)
+        	}
+	    	requestId = requestAnimationFrame(() => {
+	    		paint(canvas, ctx, scaleFactor, panX, panY)
+	    	})
         }
-        
-        let zoomOut = () => {
-        	scaleFactor -= 10
-        	paint(canvas, ctx, scaleFactor, panX, panY)
-        }
+        let timeout
+        let zoom = factor => {
+        	scaleFactor += factor
+        	if(timeout){
+        		clearTimeout(timeout)
+        	}
+        	timeout = setTimeout(paintFrame, 350)
+        }        
+    	paintFrame()
     </script>
   </body>
 </html>
