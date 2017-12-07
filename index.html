@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
   <body>
-    <canvas id="myCanvas" width="800" height="800"></canvas>
+    <canvas id="myCanvas" width="800" height="600"></canvas>
     <button onclick="zoom(10)">+</button>
     <button onclick="zoom(-10)">-</button>
     <script>
@@ -53,9 +53,29 @@
         	if(timeout){
         		clearTimeout(timeout)
         	}
-        	timeout = setTimeout(paintFrame, 350)
-        }        
-    	paintFrame()
+        	timeout = setTimeout(paintFrame, 200)
+        }      
+
+		let isDown = false; // whether mouse is pressed
+		let startCoords = []; // 'grab' coordinates when pressing mouse
+
+        canvas.onmousedown = function(e) {
+		    isDown = true;
+
+		    startCoords = [
+        		e.offsetX, // set start coordinates
+		        e.offsetY
+		   ];
+		};
+
+		canvas.onmouseup   = function(e) {
+		    isDown = false;
+
+			panX += (e.offsetX - startCoords[0]) / 100
+			panY += (e.offsetY - startCoords[1]) / 100
+			paintFrame();
+		};
+		paintFrame()
     </script>
   </body>
 </html>
